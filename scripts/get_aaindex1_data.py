@@ -49,14 +49,14 @@ def calculate_aaindex1_features(peptide_df_file_path, aaindex1_df_file_path, out
     aaindex1_dict = aaindex1_df.to_dict(orient='records')
     aaindex1_df.insert(loc=0, column='aa_dict', value=aaindex1_dict)
 
-    # add aaindex1 accession columns to peptide_df
+    print('Adding AAIndex1 accession columns to peptide_df')
     aaindex1_df = aaindex1_df.reset_index(level=0)
     aaindex1_accession_cols = []
     for row in aaindex1_df['Accession']:
         aaindex1_accession_cols.append(row)
     peptide_df = pd.concat([peptide_df, pd.DataFrame(columns=aaindex1_accession_cols)])
 
-    # calculate aaindex1 values for each peptide
+    print('Calculating AAIndex1 values for each peptide')
     all_peptide_vals = []
 
     for peptide in peptide_df['Peptide']:
@@ -66,7 +66,7 @@ def calculate_aaindex1_features(peptide_df_file_path, aaindex1_df_file_path, out
             peptide_vals.append(aaindex1_vals)
         all_peptide_vals.append(peptide_vals)
 
-    print('Almost done, just creating the df')
+    print('Creating the df')
     peptide_df.iloc[0:, 5:] = all_peptide_vals  # column index will vary by df, need to specify
     peptide_df.to_csv(output_file_name, sep='\t', index=False)
 
