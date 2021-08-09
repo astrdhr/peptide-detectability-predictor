@@ -3,18 +3,18 @@ import re
 from Bio import SeqIO
 import csv
 
-def get_fasta_proteins(fasta_file_path):
+def get_fasta_proteins(fasta_file):
     """
     Extracts fasta protein name and its corresponding sequence from a raw fasta file.
-    :param fasta_file_path -- path to raw fasta file.
-    :return: TSV file containing columns for protein name and associated sequence.
+    :param fasta_file -- path to raw fasta file.
+    :return: TSV file with columns for protein name and associated sequence.
     """
 
     # convert FASTA file to TSV file
     with open('fasta.tsv', 'w', newline='') as tsvfile:
         writer = csv.writer(tsvfile, delimiter='\t')
         tsvfile.write("Sequence\tFasta headers\n")
-        for record in SeqIO.parse(fasta_file_path, "fasta"):
+        for record in SeqIO.parse(fasta_file, "fasta"):
             writer.writerow([record.seq, record.id])
 
     fasta_proteins = pd.read_table('fasta.tsv')
@@ -76,14 +76,14 @@ def trp_digest(seq, returnStart):
     return peptides
 
 
-def get_fasta_peptides(fasta_proteins_file_path):
+def get_fasta_peptides(fasta_proteins_file):
     """
     Performs protein tryptic digest given a dataframe of protein sequences.
-    :param fasta_proteins_file_path -- Output from get_fasta_proteins().
+    :param fasta_proteins_file -- Output from get_fasta_proteins().
     :return: TSV file with additional 'Peptide' column following tryptic digest.
     """
 
-    fasta_proteins = pd.read_table(fasta_proteins_file_path, header=0)
+    fasta_proteins = pd.read_table(fasta_proteins_file, header=0)
     fasta_peptides = fasta_proteins
 
     fasta_peptides['Peptide'] = fasta_peptides.apply(lambda row: trp_digest(row['Sequence'], 0), axis=1)

@@ -2,17 +2,17 @@ import numpy as np
 import pandas as pd
 
 
-def calculate_nsaf(fasta_peptides_file_path, detected_peptides_file_path, undetected_peptides_file_path):
+def calculate_nsaf(fasta_peptides_file, detected_peptides_file, undetected_peptides_file):
     """ Performs spectral counting using the NSAF method for detected and undetected peptide datasets.
-    :param fasta_peptides_file_path: output file from get_fasta_peptides().
-    :param detected_peptides_file_path: output file from get_detected_peptides().
-    :param undetected_peptides_file_path: output file from get_undetected_peptides().
+    :param fasta_peptides_file: output file from get_fasta_peptides().
+    :param detected_peptides_file: output file from get_detected_peptides().
+    :param undetected_peptides_file: output file from get_undetected_peptides().
     :return: TSV files for detected and undetected datasets, with additional 'Quantification' column.
     """
 
-    fasta_peptides = pd.read_table(fasta_peptides_file_path)
-    detected_peptides = pd.read_table(detected_peptides_file_path)
-    undetected_peptides = pd.read_table(undetected_peptides_file_path)
+    fasta_peptides = pd.read_table(fasta_peptides_file)
+    detected_peptides = pd.read_table(detected_peptides_file)
+    undetected_peptides = pd.read_table(undetected_peptides_file)
 
     # sort detected_peptides by PEP
     detected_peptides = detected_peptides.sort_values(by=['PEP']).reset_index(drop=True)

@@ -3,9 +3,11 @@ import pandas as pd
 
 
 def convert_aaindex1_to_df(data, output_file_name):
-    """"Converts raw AAIndex1 into Pandas DataFrame. Outputs amino acid indices with accession
+    """"
+    Converts raw AAIndex1 into Pandas DataFrame. Outputs amino acid indices with accession
     and description. Adapted from: https://github.com/tadorfer/AAIndex/blob/master/raw_to_df.py.
-    Note: AAIndex1 data was downloaded from: https://www.genome.jp/ftp/db/community/aaindex/."""
+    Note: AAIndex1 data was downloaded from: https://www.genome.jp/ftp/db/community/aaindex/.
+    """
 
     # define column names and initialize dataframe
     columns = ['Accession', 'Description']
@@ -37,10 +39,10 @@ def convert_aaindex1_to_df(data, output_file_name):
     return df
 
 
-def calculate_aaindex1_features(peptide_df_file_path, aaindex1_df_file_path, output_file_name):
+def calculate_aaindex1_features(peptide_df_file, aaindex1_df_file, output_file_name):
 
-    peptide_df = pd.read_table(peptide_df_file_path)
-    aaindex1_df = pd.read_table(aaindex1_df_file_path)
+    peptide_df = pd.read_table(peptide_df_file)
+    aaindex1_df = pd.read_table(aaindex1_df_file)
 
     # turn aaindex1 values into dict format so peptide AAs can be mapped to dictionary values
     del aaindex1_df['Description']
