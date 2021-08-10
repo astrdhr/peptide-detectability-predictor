@@ -45,11 +45,13 @@ def calculate_aaindex1_features(peptide_df_file, aaindex1_df_file, output_file_n
     aaindex1_df = pd.read_table(aaindex1_df_file)
 
     # turn aaindex1 values into dict format so peptide AAs can be mapped to dictionary values
+    print('Turning AAIndex1 values into dict format')
     del aaindex1_df['Description']
     aaindex1_df = aaindex1_df.set_index('Accession')
     aaindex1_dict = aaindex1_df.to_dict(orient='records')
     aaindex1_df.insert(loc=0, column='aa_dict', value=aaindex1_dict)
 
+    # add aaindex1 accession columns to peptide_df
     print('Adding AAIndex1 accession columns to peptide_df')
     aaindex1_df = aaindex1_df.reset_index(level=0)
     aaindex1_accession_cols = []
@@ -57,6 +59,7 @@ def calculate_aaindex1_features(peptide_df_file, aaindex1_df_file, output_file_n
         aaindex1_accession_cols.append(row)
     peptide_df = pd.concat([peptide_df, pd.DataFrame(columns=aaindex1_accession_cols)])
 
+    # calculate aaindex1 values for each peptide
     print('Calculating AAIndex1 values for each peptide')
     all_peptide_vals = []
 
@@ -67,7 +70,7 @@ def calculate_aaindex1_features(peptide_df_file, aaindex1_df_file, output_file_n
             peptide_vals.append(aaindex1_vals)
         all_peptide_vals.append(peptide_vals)
 
-    print('Creating the df')
+    print('Almost done, just creating the df')
     peptide_df.iloc[0:, 5:] = all_peptide_vals  # column index will vary by df, need to specify
     peptide_df.to_csv(output_file_name, sep='\t', index=False)
 
