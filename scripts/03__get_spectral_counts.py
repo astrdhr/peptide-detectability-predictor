@@ -14,9 +14,6 @@ def calculate_nsaf(fasta_peptides_file, detected_peptides_file, undetected_pepti
     detected_peptides = pd.read_table(detected_peptides_file)
     undetected_peptides = pd.read_table(undetected_peptides_file)
 
-    # sort detected_peptides by PEP
-    detected_peptides = detected_peptides.sort_values(by=['PEP']).reset_index(drop=True)
-
     # remove any peptides in detected_peptides that map to more than one different protein
     detected_peptides = detected_peptides.groupby('Peptide').filter(lambda x: x['Protein'].nunique() == 1)
 
