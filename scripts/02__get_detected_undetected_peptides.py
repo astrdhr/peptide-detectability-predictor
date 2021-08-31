@@ -7,7 +7,7 @@ def get_detected_peptides(evidence_file):
     Extracts the proteins and respective peptide spectrum matches from the MaxQuant
     evidence.txt file.
     :param evidence_file: evidence.txt file (output from MaxQuant analysis).
-    :return: TSV file with 'Proteins', 'Peptides' (i.e. PSMs) and 'PEP' score columns.
+    :return: TSV file with 'Proteins' and 'Peptides' (i.e. PSMs) columns.
     """
 
     evidence = pd.read_table(evidence_file)
@@ -23,8 +23,9 @@ def get_detected_peptides(evidence_file):
 
     # extract protein and peptide sequence from evidence df
     # make the "leading razor groups" column as the protein column
-    detected_peptides = evidence[['Proteins', 'Sequence', 'PEP']]
+    detected_peptides = evidence[['Proteins', 'Sequence']]
     detected_peptides = detected_peptides.rename(columns={"Proteins": "Protein", "Sequence": "Peptide"})
+    # detected_peptides['Protein'] = detected_peptides['Protein'].str.split('-').str[0] # used for proteins with "-" in name
 
     detected_peptides.to_csv("detected_peptides.tsv", sep='\t', index=False)
 
@@ -44,6 +45,7 @@ def get_undetected_peptides(fasta_peptides_file, detected_peptides_file):
     expected_peptides = fasta_peptides[fasta_peptides["Protein"].isin(detected_peptides["Protein"])]
     undetected_peptides = expected_peptides[~expected_peptides["Peptide"].isin(detected_peptides["Peptide"])]
     undetected_peptides = undetected_peptides[~undetected_peptides['Peptide'].str.contains("U", na=False)]
-    undetected_peptides["PEP"] = [detected_peptides["PEP"].mean()] * undetected_peptides.shape[0]
+    undetected_peptides = undetected_peptides[~undetected_peptides['Peptide'].str.contains("X", na=False)]
+    undetected_peptides = undetected_peptides[~undetected_peptides['Peptide'].str.contains("O", na=False)]
 
     undetected_peptides.to_csv("undetected_peptides.tsv", sep='\t', index=False)
